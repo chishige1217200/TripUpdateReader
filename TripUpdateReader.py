@@ -103,7 +103,7 @@ while True:
                 bus_data_list = sorted(
                     bus_data_list, reverse=False, key=lambda x: x[0])
                 print(bus_data_list)
-                sg.popup('解析結果', str(bus_data_list))
+                # sg.popup('解析結果', str(bus_data_list))
 
         except (FileExistsError, FileNotFoundError):
             sg.popup_error_with_traceback('binファイルが見つかりませんでした。')
@@ -118,7 +118,17 @@ while True:
                 bus_data_list[i][0], routes_data)
 
         print(bus_data_list)
-        sg.popup('解析結果', str(bus_data_list))
+        # sg.popup('解析結果', str(bus_data_list))
+
+        header = ['運行ルート', '始発時刻', '号車番号']
+        widths = [60, 10, 8]
+
+        # テーブルオブジェクト作成
+        L = [[sg.Table(bus_data_list, headings=header,
+                       col_widths=widths, justification='left', expand_x=True, expand_y=True, auto_size_columns=False)]]
+
+        # ウィンドウ作成
+        window = sg.Window('解析結果', L,  resizable=True)
 
 # ウィンドウの破棄と終了
 window.close()
