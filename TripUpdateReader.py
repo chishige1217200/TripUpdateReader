@@ -3,22 +3,43 @@ import os
 import re
 
 
-def get_routes_jp_data():
-    print(os.path.dirname(__file__) + '/ryobi/routes_jp.txt')
+def get_routes_data():
     try:
-        with open(os.path.dirname(__file__) + '/ryobi/routes_jp.txt', 'r', encoding='utf-8') as f:
+        with open(os.path.dirname(__file__) + '/ryobi/routes.txt', 'r', encoding='utf-8') as f:
             # データの読み出し
-            data = f.readlines()
+            data = []
+            for line in f:
+                data.append(line.split(','))
 
     except (FileExistsError, FileNotFoundError):
-        sg.popup_error('routes_jpファイルが見つかりませんでした。')
+        sg.popup_error('routesファイルが見つかりませんでした。')
     except:
-        sg.popup_error('routes_jpファイルの読み込み中にエラーが発生しました。')
+        sg.popup_error('routesファイルの読み込み中にエラーが発生しました。')
 
+    replace_data_list = []
     # 改行文字の除去
-    replace_data = list(map(lambda n: n.replace('\n', ''), data))
+    for i in range(1, len(data)):
+        replace_data = []
+        for j in range(len(data[i])):
+            replace_data.append(data[i][j].replace('\n', ''))
+        replace_data_list.append(replace_data)
 
-    return replace_data
+    return replace_data_list
+
+
+def get_routes_long_name(route_id, routes_data):
+    return search(route_id, routes_data, 3)
+
+
+def get_routes_short_name(route_id, routes_data):
+    return search(route_id, routes_data, 2)
+
+
+def search(param, target, return_column_id):
+    for i in range(0, len(target)):
+        if target[i][0] in param:
+            return target[i][return_column_id]
+    return '無効路線'
 
 
 # オプションの設定と標準レイアウト
@@ -83,13 +104,21 @@ while True:
                     bus_data_list, reverse=False, key=lambda x: x[0])
                 print(bus_data_list)
                 sg.popup('解析結果', str(bus_data_list))
-                routes_jp_data = get_routes_jp_data()
-                print(routes_jp_data)
 
         except (FileExistsError, FileNotFoundError):
-            sg.popup_error_with_traceback('binファイルが見つかりませんでした。');
+            sg.popup_error_with_traceback('binファイルが見つかりませんでした。')
         except:
-            sg.popup_error_with_traceback('binファイルの読み込み中にエラーが発生しました。');
+            sg.popup_error_with_traceback('binファイルの読み込み中にエラーが発生しました。')
+
+        routes_data = get_routes_data()
+        # print(routes_jp_data)
+
+        for i in range(0, len(bus_data_list)):
+            bus_data_list[i][0] = get_routes_short_name(
+                bus_data_list[i][0], routes_data)
+
+        print(bus_data_list)
+        sg.popup('解析結果', str(bus_data_list))
 
 # ウィンドウの破棄と終了
 window.close()
