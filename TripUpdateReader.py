@@ -49,9 +49,7 @@ layout = [
     [sg.Text('このプログラムはhttps://loc.bus-vision.jp/ryobi/view/opendata.htmlで公開されている\n両備バス（https://www.ryobi-holdings.jp/bus/）のオープンデータを解析します。')],
     [sg.Text('"./ryobi" 配下に両備バスの標準的なバス情報フォーマット形式のデータを配置してください。')],
     [sg.Text('ryobi_trip_update.binファイルパス'),
-     sg.InputText(), sg.FileBrowse(key="file")],
-    [sg.Submit(button_text='解析実行')]
-]
+     sg.InputText(), sg.FileBrowse('参照'), sg.Submit(button_text='解析実行')]]
 
 # ウィンドウの生成
 window = sg.Window('RyobiTripUpdateReader', layout)
@@ -93,6 +91,7 @@ while True:
                         bus_data_list.append(bus_data)
                     except:
                         print("バス情報が正常に抽出できませんでした。")
+                        continue
 
                 if len(bus_data_list) == 0:
                     sg.popup('解析結果', '表示する情報はありません。')
@@ -107,8 +106,10 @@ while True:
 
         except (FileExistsError, FileNotFoundError):
             sg.popup_error_with_traceback('binファイルが見つかりませんでした。')
+            continue
         except:
             sg.popup_error_with_traceback('binファイルの読み込み中にエラーが発生しました。')
+            continue
 
         routes_data = get_routes_data()
         # print(routes_jp_data)
