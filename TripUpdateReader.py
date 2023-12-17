@@ -5,6 +5,8 @@ import re
 
 def get_routes_data():
     try:
+        print("Load routes.txt from " + os.path.normpath(
+            os.path.abspath(os.path.dirname(__file__) + '\\ryobi\\routes.txt')))
         with open(os.path.normpath(os.path.abspath(os.path.dirname(__file__) + '\\ryobi\\routes.txt')), 'r', encoding='utf-8') as f:
             # データの読み出し
             data = []
@@ -48,7 +50,7 @@ sg.theme('LightGrey')
 
 layout = [
     [sg.Text('このプログラムはhttps://loc.bus-vision.jp/ryobi/view/opendata.htmlで公開されている\n両備バス（https://www.ryobi-holdings.jp/bus/）のオープンデータを解析します。')],
-    [sg.Text('"./ryobi" 配下に両備バスの標準的なバス情報フォーマット形式のデータを配置してください。')],
+    [sg.Text('"./_internal/ryobi" 配下に両備バスの標準的なバス情報フォーマット形式のデータを配置してください。')],
     [sg.Text('ryobi_trip_update.binファイルパス'),
      sg.InputText(), sg.FileBrowse('参照'), sg.Submit(button_text='解析実行')]]
 
