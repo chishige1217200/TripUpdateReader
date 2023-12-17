@@ -5,7 +5,7 @@ import re
 
 def get_routes_data():
     try:
-        with open(os.path.dirname(__file__) + '/ryobi/routes.txt', 'r', encoding='utf-8') as f:
+        with open(os.path.normpath(os.path.abspath(os.path.dirname(__file__) + '\\ryobi\\routes.txt')), 'r', encoding='utf-8') as f:
             # データの読み出し
             data = []
             for line in f:
@@ -64,7 +64,7 @@ while True:
 
     if event == '解析実行':
         try:
-            with open(os.path.basename(os.path.normpath(values[0].replace('"', ''))), 'rb') as f:
+            with open(os.path.normpath(os.path.abspath(values[0].replace('"', ''))), 'rb') as f:
                 # バイナリデータの読み出し
                 data = str(f.read())
 
