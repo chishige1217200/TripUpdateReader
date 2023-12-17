@@ -9,6 +9,7 @@ def get_routes_data():
             # データの読み出し
             data = []
             for line in f:
+                line = line.replace('"', '')
                 data.append(line.split(','))
 
     except (FileExistsError, FileNotFoundError):
