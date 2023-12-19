@@ -5,10 +5,13 @@ import re
 
 def get_routes_data():
     try:
-        with open(os.path.dirname(__file__) + '/ryobi/routes.txt', 'r', encoding='utf-8') as f:
+        print("Load routes.txt from " + os.path.normpath(
+            os.path.abspath(os.path.dirname(__file__) + '\\ryobi\\routes.txt')))
+        with open(os.path.normpath(os.path.abspath(os.path.dirname(__file__) + '\\ryobi\\routes.txt')), 'r', encoding='utf-8') as f:
             # データの読み出し
             data = []
             for line in f:
+                line = line.replace('"', '')
                 data.append(line.split(','))
 
     except (FileExistsError, FileNotFoundError):
@@ -47,7 +50,7 @@ sg.theme('LightGrey')
 
 layout = [
     [sg.Text('このプログラムはhttps://loc.bus-vision.jp/ryobi/view/opendata.htmlで公開されている\n両備バス（https://www.ryobi-holdings.jp/bus/）のオープンデータを解析します。')],
-    [sg.Text('"./ryobi" 配下に両備バスの標準的なバス情報フォーマット形式のデータを配置してください。')],
+    [sg.Text('"./_internal/ryobi" 配下に両備バスの標準的なバス情報フォーマット形式のデータを配置してください。')],
     [sg.Text('ryobi_trip_update.binファイルパス'),
      sg.InputText(), sg.FileBrowse('参照'), sg.Submit(button_text='解析実行')]]
 
@@ -64,7 +67,7 @@ while True:
 
     if event == '解析実行':
         try:
-            with open(os.path.basename(os.path.normpath(values[0].replace('"', ''))), 'rb') as f:
+            with open(os.path.normpath(os.path.abspath(values[0].replace('"', ''))), 'rb') as f:
                 # バイナリデータの読み出し
                 data = str(f.read())
 
